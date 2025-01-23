@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./css/Login.css";
 import ErrorMessage from "../components/error/ErrorMessage";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useLoginUserMutation } from "../features/user/userAPISlice";
 import { useDispatch, useSelector } from "react-redux";
 import { setDynamicToken, setUserData } from "../features/user/userSlice";
 import { ToastContainer, toast } from "react-toastify";
+import Loader from "../components/loader/Loader";
 
 const loginToken = import.meta.env.VITE_LOGIN_TOKEN;
 const getCookie = (cookieName) => {
@@ -31,6 +32,7 @@ function Login() {
   const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const changePasswordType = useRef();
 
   const [loginInfo, setLoginInfo] = useState({
     email: "",
@@ -41,6 +43,7 @@ function Login() {
     password: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [iconToggle, setIconToggle] = useState(false);
 
   const handleChange = (el) => {
     let { name, value } = el.target;
@@ -63,6 +66,7 @@ function Login() {
     if (data !== undefined && !isError) {
       if ("success" in data) {
         dispatch(setUserData(getCookie("userAllInfo")));
+        dispatch(setDynamicToken(null));
 
         setLoginInfo({
           email: "",
@@ -72,7 +76,6 @@ function Login() {
         toast.success(data.success.message, {
           position: "top-right",
           onClose: () => {
-            dispatch(setDynamicToken(null));
             navigate("/");
           },
           autoClose: 1500,
@@ -117,8 +120,16 @@ function Login() {
     }
   };
 
+  const handleIconChange = () => {
+    setIconToggle(!iconToggle);
+
+    if (changePasswordType.current) {
+      changePasswordType.current.type = !iconToggle ? "text" : "password";
+    }
+  };
+ 
   return (
-    <section className="container forms">
+    <section className="container commonColor forms">
       <div className="form login">
         <div className="form-content  text-center">
           <h2>Login</h2>
@@ -136,7 +147,7 @@ function Login() {
               {loginError?.email && <ErrorMessage message={loginError.email} />}
             </div>
 
-            <div className="mb-4 mt-4 form-group">
+            <div className="mb-4 mt-4 form-group iconposition">
               <input
                 type="password"
                 name="password"
@@ -144,7 +155,21 @@ function Login() {
                 onChange={handleChange}
                 value={loginInfo.password}
                 placeholder="Your Password"
+                ref={changePasswordType}
               />
+
+              {iconToggle ? (
+                <i
+                  onClick={handleIconChange}
+                  className="bi bi-eye-fill iconfill"
+                ></i>
+              ) : (
+                <i
+                  onClick={handleIconChange}
+                  className="bi bi-eye-slash-fill iconfill"
+                ></i>
+              )}
+
               {loginError?.password && (
                 <ErrorMessage message={loginError.password} />
               )}
@@ -158,9 +183,7 @@ function Login() {
             </div>
 
             {isLoading ? (
-              <div className="d-flex justify-content-center mt-3 mb-3">
-                <div className="spinner-border" role="status"></div>
-              </div>
+              <Loader />
             ) : (
               <div className="button-fieldC">
                 <button className="button-fieldBTN">Login</button>

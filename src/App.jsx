@@ -15,7 +15,7 @@ import EmailConfirm from "./pages/EmailConfirm";
 import Forgot from "./pages/Forgot";
 import ChangePassword from "./pages/ChangePassword";
 import ForgotError from "./pages/ForgotError";
-import EmailMessage from "./pages/EmailMessage";
+import CustomerMain from "./pages/CustomerMain";
 
 function App() {
   const router = createBrowserRouter(
@@ -24,27 +24,15 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="add" element={<UserAdd />} />
-          <Route path="edit" element={<UserEdit />} />
+          <Route path="view/:id" element={<CustomerMain />} />
+          <Route path="edit/:id" element={<UserEdit />} />
         </Route>
-
-        {/* <Route path="/school" element={<SchoolLayout />}>
-          <Route index element={<SchoolHome />} />
-          <Route path="about" element={<SchoolAbout />} />
-          <Route
-            path="user"
-            element={<SchoolUser />}
-            loader={user}
-            errorElement={<SchoolUserError />}
-          />
-        </Route>
-        <Route path="/school/*" element={<SchoolError />} /> */}
-
+ 
         <Route path="/login" element={<Login />} />
         <Route path="/registrar" element={<Registration />} />
         <Route path="/emailconfirm" element={<EmailConfirm />} />
         <Route path="/forgot" element={<Forgot />} />
         <Route path="/forgot-error" element={<ForgotError />} />
-        <Route path="/auth/mail" element={<EmailMessage />} />
         <Route path="/change-password/:token" element={<ChangePassword />} />
         <Route path="/*" element={<Error />} />
       </>

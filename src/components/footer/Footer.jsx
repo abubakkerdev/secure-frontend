@@ -1,5 +1,3 @@
-import { Link } from "react-router-dom";
-
 function Footer() {
   return (
     <footer id="footer" className="footer  light-background">
@@ -11,7 +9,7 @@ function Footer() {
         </p>
         <div className="credits">
           Designed by{" "}
-          <Link href="https://github.com/abubakkerdev">Md.Abubakker Siddik</Link>
+          <a target="_blank" href="https://www.youtube.com/@DeepLearning-dl">Deep Learning</a>
         </div>
       </div>
     </footer>

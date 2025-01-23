@@ -1,11 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/error/ErrorMessage";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { useAddUserMutation } from "../features/user/userAPISlice";
 import "./css/Login.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setDynamicToken } from "../features/user/userSlice";
+import Loader from "../components/loader/Loader";
 
 const registrationToken = import.meta.env.VITE_REGISTRATION_TOKEN;
 
@@ -16,6 +17,8 @@ function Registration() {
   const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const changePasswordType = useRef();
+  const changeCPasswordType = useRef();
 
   const [registerInfo, setRegisterInfo] = useState({
     uname: "",
@@ -30,6 +33,8 @@ function Registration() {
     cpassword: "",
   });
   const [errorMessage, setErrorMessage] = useState("");
+  const [iconTogglePassword, setIconTogglePassword] = useState(false);
+  const [iconToggleCPassword, setIconToggleCPassword] = useState(false);
 
   const handleChange = (el) => {
     let { name, value } = el.target;
@@ -57,11 +62,10 @@ function Registration() {
           password: "",
           cpassword: "",
         });
-
+        dispatch(setDynamicToken(null));
         toast.success(data.success.message, {
           position: "top-right",
           onClose: () => {
-            dispatch(setDynamicToken(null));
             navigate("/login");
           },
           autoClose: 1500,
@@ -117,8 +121,28 @@ function Registration() {
     }
   };
 
+  const handleIconChangePassword = () => {
+    setIconTogglePassword(!iconTogglePassword);
+
+    if (changePasswordType.current) {
+      changePasswordType.current.type = !iconTogglePassword
+        ? "text"
+        : "password";
+    }
+  };
+
+  const handleIconChangeCPassword = () => {
+    setIconToggleCPassword(!iconToggleCPassword);
+
+    if (changeCPasswordType.current) {
+      changeCPasswordType.current.type = !iconToggleCPassword
+        ? "text"
+        : "password";
+    }
+  };
+
   return (
-    <section className="container forms">
+    <section className="container commonColor forms">
       <div className="form login">
         <div className="form-content  text-center">
           <h2>Signup</h2>
@@ -151,29 +175,57 @@ function Registration() {
               )}
             </div>
 
-            <div className="mb-4 mt-4 form-group">
+            <div className="mb-4 mt-4 form-group iconposition">
               <input
                 type="password"
                 name="password"
                 className="form-control"
                 placeholder="Your Password"
                 onChange={handleChange}
+                ref={changePasswordType}
                 value={registerInfo.password}
               />
+
+              {iconTogglePassword ? (
+                <i
+                  onClick={handleIconChangePassword}
+                  className="bi bi-eye-fill iconfill"
+                ></i>
+              ) : (
+                <i
+                  onClick={handleIconChangePassword}
+                  className="bi bi-eye-slash-fill iconfill"
+                ></i>
+              )}
+
               {registerError?.password && (
                 <ErrorMessage message={registerError.password} />
               )}
             </div>
 
-            <div className="mb-4 mt-4 form-group">
+            <div className="mb-4 mt-4 form-group iconposition">
               <input
                 type="password"
                 name="cpassword"
                 className="form-control"
+                ref={changeCPasswordType}
                 placeholder="Confirm Password"
                 onChange={handleChange}
                 value={registerInfo.cpassword}
               />
+
+              {iconToggleCPassword ? (
+                <i
+                  onClick={handleIconChangeCPassword}
+                  className="bi bi-eye-fill iconfill"
+                ></i>
+              ) : (
+                <i
+                  onClick={handleIconChangeCPassword}
+                  className="bi bi-eye-slash-fill iconfill"
+                ></i>
+              )}
+
               {registerError?.cpassword && (
                 <ErrorMessage message={registerError.cpassword} />
               )}
@@ -181,9 +233,7 @@ function Registration() {
               {errorMessage && <ErrorMessage message={errorMessage} />}
             </div>
             {isLoading ? (
-              <div className="d-flex justify-content-center mt-3 mb-3">
-                <div className="spinner-border" role="status"></div>
-              </div>
+              <Loader />
             ) : (
               <div className="button-fieldC">
                 <button className="button-fieldBTN">Signup</button>

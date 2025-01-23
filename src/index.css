@@ -2,6 +2,12 @@
   margin: 0;
   padding: 0;
 }
+body {
+  background-color: #F7FCFC !important;
+}
+.Toastify, .commonColor {
+  background-color: #F7FCFC !important;
+}
 
 .commonHeight {
   height: 100vh;
@@ -103,4 +109,35 @@
   margin: 65px auto 0;
   border-radius: 4px;
   transition: 0.3s;
+}
+
+/* Method 1: Hide arrows for all modern browsers */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.thumbnail-change {
+  width: 45px;
+  height: 45px;
+}
+.thumbnail-big {
+  width: 100px;
+  height: 100px;
+}
+
+.customer-errorbtn {
+  display: flex;
+  justify-content: center;
+}
+
+.customer-errorbtnEdit {
+  padding: 10px 15px;
+  background-color: #5cc5c9;
+  border-radius: 5px;
+  color: white;
+}
+.customer-errorbtnEdit:hover {
+  color: white;
 }

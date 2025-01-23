@@ -31,7 +31,26 @@ export const userAPISlice = createApi({
         body: data,
       }),
     }),
+    resetPassword: builder.mutation({
+      query: (data) => ({
+        url: "/backend/authentication/forgot-password",
+        method: "post",
+        body: data,
+      }),
+    }),
+    changePassword: builder.mutation({
+      query: (data) => ({
+        url: "/backend/authentication/change-password",
+        method: "post",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useAddUserMutation, useLoginUserMutation } = userAPISlice;
+export const {
+  useAddUserMutation,
+  useLoginUserMutation,
+  useResetPasswordMutation,
+  useChangePasswordMutation,
+} = userAPISlice;

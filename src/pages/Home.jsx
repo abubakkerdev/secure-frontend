@@ -1,28 +1,193 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import {
+  useDeleteCustomerMutation,
+  useGetCustomersQuery,
+} from "../features/customer/customerAPISlice";
+import { useDispatch } from "react-redux";
+import { setDynamicToken } from "../features/user/userSlice";
+import { useEffect } from "react";
+
+const backendGetToken = import.meta.env.VITE_API_BACKEND_GET_TOKEN;
+const backendPostToken = import.meta.env.VITE_API_BACKEND_POST_TOKEN;
+const imageBaseURL = import.meta.env.VITE_API_IMAGE_URL_KEY;
+
+function formatDateTime(timestamp) {
+  const date = new Date(timestamp);
+  const formatted = date
+    .toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    })
+    .replace(",", "")
+    .replace(",", ",");
+
+  return formatted;
+}
 
 function Home() {
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(setDynamicToken(backendGetToken));
+  }, [dispatch]);
 
-  const handleDelete = () => {
-    console.log("Delete button clicked");
-    toast.success("Wow so easy!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: false,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-    });
+  const { data, isLoading, isSuccess, isError, refetch } =
+    useGetCustomersQuery();
+
+  const [
+    deleteCustomer,
+    {
+      data: customer,
+      isLoading: customerIsLoading,
+      isSuccess: customerIsSuccess,
+      isError: customerIsError,
+    },
+  ] = useDeleteCustomerMutation();
+
+  const handleDelete = async (id, imgURL) => {
+    try {
+      // Temporarily update the token for the delete operation
+      dispatch(setDynamicToken(backendPostToken));
+      await deleteCustomer({ _id: id, imgURL }).unwrap();
+
+      // Revert token and refetch the data
+      dispatch(setDynamicToken(backendGetToken));
+    } catch (error) {
+      // console.error("Error deleting customer:", error);
+    }
   };
+
+  useEffect(() => {
+    if (customer !== undefined && !customerIsError) {
+      if ("success" in customer) {
+        refetch();
+        toast.success(customer.success.message, {
+          position: "top-right",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+        });
+      } else {
+        if (typeof customer.error === "object") {
+          toast.error(customer.error.message, {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          toast.error(customer.error, {
+            position: "top-right",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: false,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+          });
+        }
+      }
+    }
+
+    if (customerIsError) {
+      toast.error("There was an server-side Error.", {
+        position: "top-right",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    }
+  }, [customer, customerIsSuccess, customerIsError, refetch]);
+
+  let content = "";
+
+  if (isSuccess) {
+    if (data) {
+      if (data?.error?.message === "Failed to fetch Data") {
+        content = (
+          <tr>
+            <td colSpan={9} className="text-center">
+              <h4>Currently, there is no data to display.</h4>
+            </td>
+          </tr>
+        );
+      } else if (data?.success?.data.length > 0) {
+        content = data?.success?.data?.map((customer, index) => (
+          <tr key={index}>
+            <td>{index + 1}</td>
+            <td>
+              <div className="thumbnail-change">
+                <img
+                  src={
+                    customer.imageURL
+                      ? `${imageBaseURL}/${customer.imageURL}`
+                      : "/public/img/default.jpg"
+                  }
+                  className="img-thumbnail"
+                  alt={customer.imageURL || "default.jpg"}
+                />
+              </div>
+            </td>
+            <td>{customer.uname}</td>
+            <td>{customer.email}</td>
+            <td>{customer.phone}</td>
+            <td>{formatDateTime(customer.date)}</td>
+            <td>{customer.subcontinents}</td>
+            <td>
+              {customer.description.slice(0, 20)} ...
+              <NavLink to={`/view/${customer._id}`}>more</NavLink>
+            </td>
+            <td>
+              <div role="group" className="btn-group btn-group-sm commonBtn">
+                <Link to={`/edit/${customer._id}`} className="btn btn-primary">
+                  Edit
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(customer._id, customer.imageURL)}
+                  className="btn btn-danger"
+                >
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        ));
+      } else {
+        content = (
+          <tr>
+            <td colSpan={9} className="text-center">
+              <h4>An issue occurred on the server. Please retry.</h4>
+            </td>
+          </tr>
+        );
+      }
+    }
+  }
 
   return (
     <>
       <section
         id="appointment"
-        className="appointment section commonHeight light-background"
+        className="appointment section light-background"
       >
         <div className="container section-title" data-aos="fade-up">
           <h2>Information Table</h2>
@@ -33,132 +198,33 @@ function Home() {
             <thead>
               <tr>
                 <th>#</th>
+                <th>Photo</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Password</th>
-                <th>Country</th>
+                <th>Phone</th>
+                <th>Date</th>
+                <th>Subcontinent</th>
+                <th>Description</th>
                 <th>Action</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>1</td>
-                <td>Madaline Gardner</td>
-                <td>ryjuwodoca@gmail.com</td>
-                <td>Pa$$w0rd!</td>
-                <td>Colombia</td>
-                <td>
-                  <div
-                    role="group"
-                    className="btn-group btn-group-sm commonBtn"
-                  >
-                    <Link to="/edit" className="btn btn-primary">
-                      Edit
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={handleDelete}
-                      className="btn btn-danger"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Marcia Witt</td>
-                <td>xugyr@gmail.com</td>
-                <td>Pa$$w0rd!</td>
-                <td>Australia</td>
-                <td>
-                  <div
-                    role="group"
-                    className="btn-group btn-group-sm commonBtn"
-                  >
-                    <Link to="/edit" className="btn btn-primary">
-                      Edit
-                    </Link>
-                    <button type="button" className="btn btn-danger">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Burke Mccall</td>
-                <td>vizene@gmail.com</td>
-                <td>Pa$$w0rd!</td>
-                <td>Germany</td>
-                <td>
-                  <div role="group" className="btn-group btn-group-sm">
-                    <button type="button" className="btn btn-primary">
-                      Edit
-                    </button>
-                    <button type="button" className="btn btn-danger">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Wanda Giles</td>
-                <td>jusytaxoji@gmail.com</td>
-                <td>Pa$$w0rd!</td>
-                <td>Spain</td>
-                <td>
-                  <div role="group" className="btn-group btn-group-sm">
-                    <button type="button" className="btn btn-primary">
-                      Edit
-                    </button>
-                    <button type="button" className="btn btn-danger">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>zarozemede</td>
-                <td>xytetery@mailinator.com</td>
-                <td>Pa$$w0rd!</td>
-                <td>Denmark</td>
-                <td>
-                  <div role="group" className="btn-group btn-group-sm">
-                    <button type="button" className="btn btn-primary">
-                      Edit
-                    </button>
-                    <button type="button" className="btn btn-danger">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>Martin Tillman</td>
-                <td>fyhibuwax@gmail.com</td>
-                <td>Pa$$w0rd!</td>
-                <td>Spain</td>
-                <td>
-                  <div role="group" className="btn-group btn-group-sm">
-                    <button type="button" className="btn btn-primary">
-                      Edit
-                    </button>
-                    <button type="button" className="btn btn-danger">
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              {isLoading && (
+                <tr>
+                  <td colSpan={9} className="text-center">
+                    <h4>Loading...</h4>
+                  </td>
+                </tr>
+              )}
 
-              <tr>
-                <td colSpan={6} className="text-center">
-                  <h4>Loading</h4>
-                </td>
-              </tr>
+              {isError && (
+                <tr>
+                  <td colSpan={9} className="text-center">
+                    <h4>Failed to fetch Data. Please try again later.</h4>
+                  </td>
+                </tr>
+              )}
+              {content}
             </tbody>
           </table>
         </div>

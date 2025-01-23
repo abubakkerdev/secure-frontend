@@ -1,6 +1,6 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setUserData } from "../../features/user/userSlice";
+import { setDynamicToken, setUserData } from "../../features/user/userSlice";
 
 function destroyCookie(name) {
   document.cookie = name + "=; expires=Thu, 11 Jan 1971 00:00:00 UTC; path=/;";
@@ -13,6 +13,8 @@ function Header() {
   const handleLogOut = () => {
     destroyCookie("userAllInfo");
     dispatch(setUserData({ error: false }));
+    dispatch(setDynamicToken(null));
+    
     navigate("/login");
   };
 

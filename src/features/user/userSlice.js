@@ -21,6 +21,9 @@ const initialState = {
     ? getCookie("userAllInfo")
     : { error: false },
   dynamicToken: null,
+  forgotToken: getCookie("forgotToken")
+    ? getCookie("forgotToken")
+    : { forgotToken: "101010" },
 };
 
 export const userSlice = createSlice({
@@ -33,9 +36,13 @@ export const userSlice = createSlice({
     setDynamicToken(state, action) {
       state.dynamicToken = action.payload; // Update the token dynamically
     },
+    setForgotToken(state, action) {
+      state.forgotToken = action.payload;
+    },
   },
 });
 
-export const { setUserData, setDynamicToken } = userSlice.actions;
+export const { setUserData, setDynamicToken, setForgotToken } =
+  userSlice.actions;
 
 export default userSlice.reducer;
