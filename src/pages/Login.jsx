@@ -44,7 +44,7 @@ function Login() {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [iconToggle, setIconToggle] = useState(false);
-
+ 
   const handleChange = (el) => {
     let { name, value } = el.target;
     setErrorMessage("");
@@ -55,7 +55,7 @@ function Login() {
   };
 
   useEffect(() => {
-    if ("login" in userAuth) {
+    if (userAuth.hasOwnProperty('login')) {
       if (userAuth.login) {
         navigate("/");
       }
@@ -64,7 +64,7 @@ function Login() {
 
   useEffect(() => {
     if (data !== undefined && !isError) {
-      if ("success" in data) {
+      if (data.hasOwnProperty('success')) {
         dispatch(setUserData(getCookie("userAllInfo")));
         dispatch(setDynamicToken(null));
 
@@ -88,7 +88,7 @@ function Login() {
         });
       } else {
         if (typeof data.error === "object") {
-          if ("field" in data.error) {
+          if (data.error.hasOwnProperty('field')) {
             setLoginError({
               [data.error.field]: data.error.message,
             });

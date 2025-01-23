@@ -9,7 +9,7 @@ function MainLayout() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ("error" in userAuth) {
+    if (userAuth.hasOwnProperty('error')) {
       if (!userAuth.error) {
         navigate("/login");
       }
