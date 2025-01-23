@@ -54,13 +54,7 @@ function Login() {
     setLoginInfo({ ...loginInfo, [name]: value });
   };
 
-  useEffect(() => {
-    if (userAuth.hasOwnProperty('login')) {
-      if (userAuth.login) {
-        navigate("/");
-      }
-    }
-  }, [navigate, userAuth]);
+ 
 
   useEffect(() => {
     if (data !== undefined && !isError) {
