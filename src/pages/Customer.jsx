@@ -82,7 +82,7 @@ function Customer() {
                       src={
                         data?.success?.data[0]?.imageURL
                           ? `${imageBaseURL}/${data?.success?.data[0]?.imageURL}`
-                          : "/public/img/default.jpg"
+                          : "/img/default.jpg"
                       }
                       className="img-thumbnail"
                       alt={data?.success?.data[0]?.imageURL || "default.jpg"}

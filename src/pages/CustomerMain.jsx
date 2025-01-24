@@ -103,7 +103,7 @@ function Customer() {
                       src={
                         customerInfo.imageURL
                           ? `${imageBaseURL}/${customerInfo.imageURL}`
-                          : "/public/img/default.jpg"
+                          : "/img/default.jpg"
                       }
                       className="img-thumbnail"
                       alt={customerInfo.imageURL || "default.jpg"}

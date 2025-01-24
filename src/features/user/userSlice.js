@@ -31,13 +31,13 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action) => {
-      state.userLoginInfo = action.payload;
+      state = { ...state, userLoginInfo: action.payload };
     },
     setDynamicToken(state, action) {
-      state.dynamicToken = action.payload; // Update the token dynamically
+      state = { ...state, dynamicToken: action.payload };
     },
     setForgotToken(state, action) {
-      state.forgotToken = action.payload;
+      state = { ...state, forgotToken: action.payload };
     },
   },
 });

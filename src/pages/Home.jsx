@@ -139,7 +139,7 @@ function Home() {
                   src={
                     customer.imageURL
                       ? `${imageBaseURL}/${customer.imageURL}`
-                      : "/public/img/default.jpg"
+                      : "/img/default.jpg"
                   }
                   className="img-thumbnail"
                   alt={customer.imageURL || "default.jpg"}

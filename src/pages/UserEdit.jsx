@@ -325,7 +325,7 @@ function UserEdit() {
                       src={
                         userInput.imageURL
                           ? `${imageBaseURL}/${userInput.imageURL}`
-                          : "/public/img/default.jpg"
+                          : "/img/default.jpg"
                       }
                       className="img-thumbnail"
                       alt={userInput.imageURL}
