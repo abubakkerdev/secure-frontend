@@ -32,16 +32,24 @@ function ChangePassword() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if (userAuth && "login" in userAuth.userLoginInfo) {
-      if (userAuth.userLoginInfo.login) {
+    if (userAuth && "login" in userAuth.userLoginInfo.infoUser) {
+      if (userAuth.userLoginInfo.infoUser.login) {
         navigate("/");
       }
     } else {
-      if (userAuth && token !== userAuth.forgotToken.forgotToken) {
+      if (
+        userAuth &&
+        token !== userAuth.userLoginInfo.forgotToken.forgotToken
+      ) {
         navigate("/login");
       }
     }
-  }, [token, navigate, userAuth.userLoginInfo, userAuth.forgotToken]);
+  }, [
+    token,
+    navigate,
+    userAuth.userLoginInfo.infoUser,
+    userAuth.userLoginInfo.forgotToken,
+  ]);
 
   useEffect(() => {
     if (data && data !== undefined && !isError) {

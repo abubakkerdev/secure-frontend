@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 
 function ForgotError() {
-  const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
+  const userAuth = useSelector((state) => state.userInfo.userLoginInfo.infoUser);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -11,7 +11,7 @@ function ForgotError() {
       if (userAuth.login) {
         navigate("/");
       }
-    }
+    } 
   }, [navigate, userAuth]);
 
   return (

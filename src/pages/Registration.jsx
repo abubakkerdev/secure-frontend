@@ -14,7 +14,7 @@ function Registration() {
   const [addUser, { data, isLoading, isSuccess, isError }] =
     useAddUserMutation();
 
-  const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
+  const userAuth = useSelector((state) => state.userInfo.userLoginInfo.infoUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const changePasswordType = useRef();

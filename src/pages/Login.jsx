@@ -23,13 +23,13 @@ const getCookie = (cookieName) => {
         )
     );
   return cookieValue.find((el) => el && el);
-};
+}; 
 
 function Login() {
   const [loginUser, { data, isLoading, isSuccess, isError }] =
     useLoginUserMutation();
 
-  const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
+  const userAuth = useSelector((state) => state.userInfo.userLoginInfo.infoUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const changePasswordType = useRef();

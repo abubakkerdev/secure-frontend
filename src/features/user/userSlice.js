@@ -17,13 +17,15 @@ const getCookie = (cookieName) => {
 };
 
 const initialState = {
-  userLoginInfo: getCookie("userAllInfo")
-    ? getCookie("userAllInfo")
-    : { error: false },
-  dynamicToken: null,
-  forgotToken: getCookie("forgotToken")
-    ? getCookie("forgotToken")
-    : { forgotToken: "101010" },
+  userLoginInfo: {
+    infoUser: getCookie("userAllInfo")
+      ? getCookie("userAllInfo")
+      : { error: false },
+    forgotToken: getCookie("forgotToken")
+      ? getCookie("forgotToken")
+      : { forgotToken: "101010" },
+    dynamicToken: null,
+  },
 };
 
 export const userSlice = createSlice({
@@ -31,13 +33,13 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     setUserData: (state, action) => {
-      return { ...state, userLoginInfo: action.payload };
+      state.userLoginInfo.infoUser = action.payload;
     },
     setDynamicToken(state, action) {
-      return { ...state, dynamicToken: action.payload };
+      state.userLoginInfo.dynamicToken = action.payload;
     },
     setForgotToken(state, action) {
-      return { ...state, forgotToken: action.payload };
+      state.userLoginInfo.forgotToken = action.payload;
     },
   },
 });

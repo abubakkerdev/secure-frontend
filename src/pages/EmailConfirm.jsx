@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 function EmailConfirm() {
   const navigate = useNavigate();
-  const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
+  const userAuth = useSelector((state) => state.userInfo.userLoginInfo.infoUser);
   const [message, setMessage] = useState("");
 
   useEffect(() => {

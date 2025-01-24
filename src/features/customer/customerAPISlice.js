@@ -7,7 +7,7 @@ export const customerAPISlice = createApi({
     baseUrl: baseUrl,
     credentials: "include",
     prepareHeaders: (headers, { getState }) => {
-      const token = getState().userInfo.dynamicToken;
+      const token = getState().userInfo.userLoginInfo.dynamicToken;
       headers.set("Content-Type", "application/json");
       if (token) {
         headers.set("Authorization", `Basic ${btoa(`user:${token}`)}`);

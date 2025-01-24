@@ -30,7 +30,7 @@ function Forgot() {
   const [resetPassword, { data, isLoading, isSuccess, isError }] =
     useResetPasswordMutation();
 
-  const userAuth = useSelector((state) => state.userInfo.userLoginInfo);
+  const userAuth = useSelector((state) => state.userInfo.userLoginInfo.infoUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
