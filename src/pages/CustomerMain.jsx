@@ -48,8 +48,8 @@ function Customer() {
   });
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setCustomerInfo({
           id: data.success.data[0]._id,
           uname: data.success.data[0].uname,

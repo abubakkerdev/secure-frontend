@@ -63,8 +63,8 @@ function Home() {
   };
 
   useEffect(() => {
-    if (customer !== undefined && !customerIsError) {
-      if (customer.hasOwnProperty('success')) {
+    if (customer && customer !== undefined && !customerIsError) {
+      if (customer && "success" in customer) {
         refetch();
         toast.success(customer.success.message, {
           position: "top-right",

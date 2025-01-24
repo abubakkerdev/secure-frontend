@@ -51,8 +51,8 @@ function UserEdit() {
   });
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setErrorMessageTwo("");
         setUserInput({
           id: data.success.data[0]._id,
@@ -159,8 +159,8 @@ function UserEdit() {
   };
 
   useEffect(() => {
-    if (customer !== undefined && !customerIsError) {
-      if ("success" in customer) {
+    if (customer && customer !== undefined && !customerIsError) {
+      if (customer && "success" in customer) {
         refetch();
         customersRefetch();
         setUserErrorMessage({

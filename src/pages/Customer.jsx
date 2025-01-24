@@ -38,8 +38,8 @@ function Customer() {
   const { data, isLoading, isSuccess, isError } = useGetCustomerQuery(id);
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setErrorMessage("");
       } else {
         if (typeof data.error === "object") {

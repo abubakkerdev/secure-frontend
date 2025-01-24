@@ -111,8 +111,8 @@ function UserAdd() {
   };
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setUserInput({
           uname: "",
           email: "",
@@ -171,10 +171,7 @@ function UserAdd() {
   }, [data, isSuccess, isError, dispatch, refetch]);
 
   return (
-    <section
-      id="appointment"
-      className="appointment section  light-background"
-    >
+    <section id="appointment" className="appointment section  light-background">
       <div className="container section-title" data-aos="fade-up">
         <h2>Add Information</h2>
       </div>

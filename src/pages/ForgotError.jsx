@@ -7,7 +7,7 @@ function ForgotError() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if ("login" in userAuth) {
+    if (userAuth && "login" in userAuth) {
       if (userAuth.login) {
         navigate("/");
       }

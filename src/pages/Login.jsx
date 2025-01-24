@@ -44,7 +44,7 @@ function Login() {
   });
   const [errorMessage, setErrorMessage] = useState("");
   const [iconToggle, setIconToggle] = useState(false);
- 
+
   const handleChange = (el) => {
     let { name, value } = el.target;
     setErrorMessage("");
@@ -54,11 +54,17 @@ function Login() {
     setLoginInfo({ ...loginInfo, [name]: value });
   };
 
- 
+  useEffect(() => {
+    if (userAuth && "login" in userAuth) {
+      if (userAuth.login) {
+        navigate("/");
+      }
+    }
+  }, [navigate, userAuth]);
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if (data.hasOwnProperty('success')) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         dispatch(setUserData(getCookie("userAllInfo")));
         dispatch(setDynamicToken(null));
 
@@ -82,7 +88,7 @@ function Login() {
         });
       } else {
         if (typeof data.error === "object") {
-          if (data.error.hasOwnProperty('field')) {
+          if ("field" in data.error) {
             setLoginError({
               [data.error.field]: data.error.message,
             });
@@ -121,7 +127,7 @@ function Login() {
       changePasswordType.current.type = !iconToggle ? "text" : "password";
     }
   };
- 
+
   return (
     <section className="container commonColor forms">
       <div className="form login">
@@ -145,7 +151,7 @@ function Login() {
               <input
                 type="password"
                 name="password"
-                className="form-control"
+                className="form-control "
                 onChange={handleChange}
                 value={loginInfo.password}
                 placeholder="Your Password"

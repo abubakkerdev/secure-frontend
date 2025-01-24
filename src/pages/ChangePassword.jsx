@@ -32,20 +32,20 @@ function ChangePassword() {
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
-    if ("login" in userAuth.userLoginInfo) {
+    if (userAuth && "login" in userAuth.userLoginInfo) {
       if (userAuth.userLoginInfo.login) {
         navigate("/");
       }
     } else {
-      if (token !== userAuth.forgotToken.forgotToken) {
+      if (userAuth && token !== userAuth.forgotToken.forgotToken) {
         navigate("/login");
       }
     }
   }, [token, navigate, userAuth.userLoginInfo, userAuth.forgotToken]);
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setChangePasswordInfo({
           password: "",
           cpassword: "",

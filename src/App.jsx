@@ -16,7 +16,7 @@ import Forgot from "./pages/Forgot";
 import ChangePassword from "./pages/ChangePassword";
 import ForgotError from "./pages/ForgotError";
 import CustomerMain from "./pages/CustomerMain";
- 
+
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(

@@ -9,13 +9,12 @@ function EmailConfirm() {
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if ("login" in userAuth) {
+    if (userAuth && "login" in userAuth) {
       if (userAuth.login) {
         navigate("/");
       }
     }
   }, [navigate, userAuth]);
-
 
   useEffect(() => {
     let site_url = window.location.href;
@@ -61,7 +60,6 @@ function EmailConfirm() {
       navigate("/registrar");
     }
   }, [navigate]);
-
 
   return (
     <section className="container commonColor forms">

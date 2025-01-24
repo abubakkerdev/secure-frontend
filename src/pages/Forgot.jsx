@@ -38,7 +38,7 @@ function Forgot() {
   const [email, setEmail] = useState("");
 
   useEffect(() => {
-    if ("login" in userAuth) {
+    if (userAuth && "login" in userAuth) {
       if (userAuth.login) {
         navigate("/");
       }
@@ -46,8 +46,8 @@ function Forgot() {
   }, [navigate, userAuth]);
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setEmail("");
         dispatch(setForgotToken(getCookie("forgotToken")));
         dispatch(setDynamicToken(null));

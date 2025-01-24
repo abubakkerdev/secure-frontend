@@ -46,7 +46,7 @@ function Registration() {
   };
 
   useEffect(() => {
-    if ("login" in userAuth) {
+    if (userAuth && "login" in userAuth) {
       if (userAuth.login) {
         navigate("/");
       }
@@ -54,8 +54,8 @@ function Registration() {
   }, [navigate, userAuth]);
 
   useEffect(() => {
-    if (data !== undefined && !isError) {
-      if ("success" in data) {
+    if (data && data !== undefined && !isError) {
+      if (data && "success" in data) {
         setRegisterInfo({
           uname: "",
           email: "",
